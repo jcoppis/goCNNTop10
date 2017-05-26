@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -13,8 +14,9 @@ func main() {
 	http.HandleFunc("/", home)
 	http.HandleFunc("/about", about)
 	http.HandleFunc("/cnn", getCNN)
+	http.HandleFunc("/json", getJSON)
 	fmt.Printf("Servidor iniciado en el puerto '%d'\n", 8080)
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func home(w http.ResponseWriter, req *http.Request) {
@@ -35,4 +37,9 @@ func getCNN(w http.ResponseWriter, req *http.Request) {
 
 func about(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "about")
+}
+
+func getJSON(w http.ResponseWriter, r *http.Request) {
+	jsonStr := []byte(`{"title":"Buy cheese and bread for breakfast."}`)
+	json.NewEncoder(w).Encode(jsonStr)
 }
